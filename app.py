@@ -31,6 +31,9 @@ def get_closest_word(w):
     # print(f"closest match for '{w}' is '{top_match[0]}'")
     return vocab_indexer.index_of(top_match[0])
 
+def clean_word(w):
+    return ''.join([c for c in w if c.isalpha()])
+    
 @app.route('/codeswitch', methods=['POST'])
 def webhook():
     req = request.get_json(silent=True, force=True)
@@ -38,7 +41,7 @@ def webhook():
     print("Request:")
     print(json.dumps(req, indent=4))
     words = req["text"]
-    sent = [s for s in words.split()]
+    sent = [clean_word(s) for s in words.split()]
     word_idxs = []
     for w in sent:
         idx = vocab_indexer.index_of(w)
